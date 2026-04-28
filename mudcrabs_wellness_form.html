@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Mudcrabs Rugby — Wellness Check</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1B2A4A;
+    --navy-light: #243660;
+    --red: #C0392B;
+    --red-light: #E74C3C;
+    --gold: #F0A500;
+    --green: #1A9E5C;
+    --amber: #E07B00;
+    --white: #FFFFFF;
+    --off-white: #F7F8FA;
+    --border: #E2E6ED;
+    --text: #1a1a2e;
+    --muted: #6B7489;
+    --card-shadow: 0 2px 12px rgba(27,42,74,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--navy);
+    min-height: 100vh;
+    padding: 0 0 40px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Background texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 40px,
+        rgba(255,255,255,0.015) 40px,
+        rgba(255,255,255,0.015) 41px
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 32px 0 24px;
+  }
+
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 100px;
+    padding: 6px 16px;
+    margin-bottom: 16px;
+  }
+
+  .header-badge span {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .header h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.1;
+    letter-spacing: 0.01em;
+    margin-bottom: 8px;
+  }
+
+  .header p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.55);
+    font-weight: 400;
+  }
+
+  /* Card */
+  .card {
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 12px;
+  }
+
+  .card-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 16px 20px 6px;
+  }
+
+  /* Player select */
+  .player-wrap {
+    padding: 0 20px 18px;
+  }
+
+  .player-wrap select {
+    width: 100%;
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    background: var(--off-white);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7489' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+
+  .player-wrap select:focus {
+    outline: none;
+    border-color: var(--navy);
+  }
+
+  /* Date display */
+  .date-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--off-white);
+  }
+
+  .date-strip .date-label {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .date-strip .date-val {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* Question block */
+  .q-block {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .q-block:last-child { border-bottom: none; }
+
+  .q-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 12px;
+  }
+
+  .q-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .q-hint {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .q-selected-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    min-width: 28px;
+    text-align: right;
+    color: var(--border);
+    transition: color 0.2s;
+    flex-shrink: 0;
+  }
+
+  .scale-row {
+    display: flex;
+    gap: 6px;
+  }
+
+  .scale-btn {
+    flex: 1;
+    height: 44px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: var(--off-white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.12s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scale-btn:active { transform: scale(0.94); }
+
+  .scale-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+  }
+
+  .scale-labels span {
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  /* Per-question accent colours */
+  [data-q="sleep"]    .scale-btn.sel { background: var(--navy);  border-color: var(--navy);  color: #fff; }
+  [data-q="soreness"] .scale-btn.sel { background: var(--red);   border-color: var(--red);   color: #fff; }
+  [data-q="stress"]   .scale-btn.sel { background: var(--amber); border-color: var(--amber); color: #fff; }
+  [data-q="mood"]     .scale-btn.sel { background: var(--green); border-color: var(--green); color: #fff; }
+  [data-q="energy"]   .scale-btn.sel { background: #7B3FA8;      border-color: #7B3FA8;      color: #fff; }
+
+  [data-q="sleep"]    .q-selected-val.active { color: var(--navy);  }
+  [data-q="soreness"] .q-selected-val.active { color: var(--red);   }
+  [data-q="stress"]   .q-selected-val.active { color: var(--amber); }
+  [data-q="mood"]     .q-selected-val.active { color: var(--green); }
+  [data-q="energy"]   .q-selected-val.active { color: #7B3FA8;      }
+
+  /* Niggle card */
+  .niggle-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 20px 18px;
+  }
+
+  .niggle-btn {
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    background: var(--off-white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.12s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .niggle-btn .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    transition: all 0.12s;
+  }
+
+  .niggle-btn.sel-no   { border-color: var(--green); background: #EAF9F1; }
+  .niggle-btn.sel-no   .dot { background: var(--green); border-color: var(--green); }
+  .niggle-btn.sel-yes  { border-color: var(--amber); background: #FFF5E6; }
+  .niggle-btn.sel-yes  .dot { background: var(--amber); border-color: var(--amber); }
+  .niggle-btn.sel-inj  { border-color: var(--red); background: #FEF0EF; }
+  .niggle-btn.sel-inj  .dot { background: var(--red); border-color: var(--red); }
+
+  .niggle-notes-wrap {
+    padding: 0 20px 18px;
+    display: none;
+  }
+
+  .niggle-notes-wrap textarea {
+    width: 100%;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--off-white);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    resize: none;
+    min-height: 80px;
+    transition: border-color 0.15s;
+  }
+
+  .niggle-notes-wrap textarea:focus {
+    outline: none;
+    border-color: var(--navy);
+  }
+
+  /* Score panel */
+  .score-panel {
+    display: none;
+    background: var(--navy);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 12px;
+  }
+
+  .score-panel.visible { display: block; }
+
+  .score-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .score-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .score-num span {
+    font-size: 22px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 600;
+  }
+
+  .score-zone-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 100px;
+  }
+
+  .zone-ready  { background: rgba(26,158,92,0.2);  color: #4CDEA0; }
+  .zone-monitor{ background: rgba(224,123,0,0.2);  color: #FFB347; }
+  .zone-flag   { background: rgba(192,57,43,0.2);  color: #FF7A6E; }
+
+  .score-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .bar-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    width: 64px;
+    flex-shrink: 0;
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 5px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.4s cubic-bezier(.4,0,.2,1);
+    background: rgba(255,255,255,0.3);
+  }
+
+  .bar-val {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.6);
+    width: 16px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* Submit button */
+  .submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--gold);
+    color: var(--navy);
+    border: none;
+    border-radius: 14px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 12px;
+  }
+
+  .submit-btn:hover   { background: #FFB800; transform: translateY(-1px); }
+  .submit-btn:active  { transform: scale(0.98); }
+  .submit-btn:disabled {
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.3);
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .submit-note {
+    text-align: center;
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    padding-bottom: 8px;
+  }
+
+  /* Success screen */
+  #success-screen {
+    display: none;
+    text-align: center;
+    padding: 48px 20px;
+  }
+
+  .success-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    animation: pop 0.4s cubic-bezier(.4,0,.2,1);
+  }
+
+  @keyframes pop {
+    0%   { transform: scale(0); opacity: 0; }
+    70%  { transform: scale(1.12); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .success-icon svg { width: 32px; height: 32px; }
+
+  #success-screen h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  #success-screen p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.5;
+  }
+
+  #success-detail {
+    margin-top: 20px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 16px 20px;
+    text-align: left;
+  }
+
+  #success-detail .sd-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 4px 0;
+    color: rgba(255,255,255,0.55);
+  }
+
+  #success-detail .sd-row strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  /* Spinner */
+  .spinner {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(27,42,74,0.3);
+    border-top-color: var(--navy);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Error banner */
+  .error-banner {
+    display: none;
+    background: #FEF0EF;
+    border: 1px solid #F5C1BD;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #8B2018;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  /* Progress dots */
+  .progress-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 16px 0 8px;
+  }
+
+  .dot-pip {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    transition: background 0.2s;
+  }
+
+  .dot-pip.done { background: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-badge">
+      <span>Mudcrabs Rugby</span>
+    </div>
+    <h1>Morning Wellness<br>Check-In</h1>
+    <p>Complete before training — takes under a minute</p>
+  </div>
+
+  <!-- Progress dots -->
+  <div class="progress-dots" id="progress-dots">
+    <div class="dot-pip" id="dot-0"></div>
+    <div class="dot-pip" id="dot-1"></div>
+    <div class="dot-pip" id="dot-2"></div>
+    <div class="dot-pip" id="dot-3"></div>
+    <div class="dot-pip" id="dot-4"></div>
+    <div class="dot-pip" id="dot-5"></div>
+    <div class="dot-pip" id="dot-6"></div>
+  </div>
+
+  <!-- Form -->
+  <div id="form-section">
+
+    <!-- Player + date card -->
+    <div class="card">
+      <div class="date-strip">
+        <span class="date-label">Training day</span>
+        <span class="date-val" id="date-display"></span>
+      </div>
+      <div class="card-label">Your name</div>
+      <div class="player-wrap">
+        <select id="player-sel">
+          <option value="">Select your name...</option>
+          <!-- ↓↓ REPLACE THESE WITH YOUR ACTUAL PLAYER NAMES ↓↓ -->
+          <option>Player 1</option>
+          <option>Player 2</option>
+          <option>Player 3</option>
+          <option>Player 4</option>
+          <option>Player 5</option>
+          <option>Player 6</option>
+          <option>Player 7</option>
+          <option>Player 8</option>
+          <option>Player 9</option>
+          <option>Player 10</option>
+          <option>Player 11</option>
+          <option>Player 12</option>
+          <option>Player 13</option>
+          <option>Player 14</option>
+          <option>Player 15</option>
+          <option>Player 16</option>
+          <option>Player 17</option>
+          <!-- ↑↑ END OF PLAYER LIST ↑↑ -->
+        </select>
+      </div>
+    </div>
+
+    <!-- Wellness questions card -->
+    <div class="card">
+
+      <div class="q-block" data-q="sleep">
+        <div class="q-top">
+          <div>
+            <div class="q-title">Sleep quality</div>
+            <div class="q-hint">How well did you sleep last night?</div>
+          </div>
+          <div class="q-selected-val" id="val-sleep">—</div>
+        </div>
+        <div class="scale-row">
+          <button class="scale-btn" data-val="1">1</button>
+          <button class="scale-btn" data-val="2">2</button>
+          <button class="scale-btn" data-val="3">3</button>
+          <button class="scale-btn" data-val="4">4</button>
+          <button class="scale-btn" data-val="5">5</button>
+        </div>
+        <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
+      </div>
+
+      <div class="q-block" data-q="soreness">
+        <div class="q-top">
+          <div>
+            <div class="q-title">Muscle soreness</div>
+            <div class="q-hint">How sore are your muscles right now?</div>
+          </div>
+          <div class="q-selected-val" id="val-soreness">—</div>
+        </div>
+        <div class="scale-row">
+          <button class="scale-btn" data-val="1">1</button>
+          <button class="scale-btn" data-val="2">2</button>
+          <button class="scale-btn" data-val="3">3</button>
+          <button class="scale-btn" data-val="4">4</button>
+          <button class="scale-btn" data-val="5">5</button>
+        </div>
+        <div class="scale-labels"><span>Very sore</span><span>No soreness</span></div>
+      </div>
+
+      <div class="q-block" data-q="stress">
+        <div class="q-top">
+          <div>
+            <div class="q-title">Stress levels</div>
+            <div class="q-hint">Work, life, everything — how stressed are you?</div>
+          </div>
+          <div class="q-selected-val" id="val-stress">—</div>
+        </div>
+        <div class="scale-row">
+          <button class="scale-btn" data-val="1">1</button>
+          <button class="scale-btn" data-val="2">2</button>
+          <button class="scale-btn" data-val="3">3</button>
+          <button class="scale-btn" data-val="4">4</button>
+          <button class="scale-btn" data-val="5">5</button>
+        </div>
+        <div class="scale-labels"><span>Very stressed</span><span>No stress</span></div>
+      </div>
+
+      <div class="q-block" data-q="mood">
+        <div class="q-top">
+          <div>
+            <div class="q-title">Mood</div>
+            <div class="q-hint">How are you feeling in yourself today?</div>
+          </div>
+          <div class="q-selected-val" id="val-mood">—</div>
+        </div>
+        <div class="scale-row">
+          <button class="scale-btn" data-val="1">1</button>
+          <button class="scale-btn" data-val="2">2</button>
+          <button class="scale-btn" data-val="3">3</button>
+          <button class="scale-btn" data-val="4">4</button>
+          <button class="scale-btn" data-val="5">5</button>
+        </div>
+        <div class="scale-labels"><span>Low</span><span>Great</span></div>
+      </div>
+
+      <div class="q-block" data-q="energy">
+        <div class="q-top">
+          <div>
+            <div class="q-title">Energy levels</div>
+            <div class="q-hint">How energetic do you feel heading into training?</div>
+          </div>
+          <div class="q-selected-val" id="val-energy">—</div>
+        </div>
+        <div class="scale-row">
+          <button class="scale-btn" data-val="1">1</button>
+          <button class="scale-btn" data-val="2">2</button>
+          <button class="scale-btn" data-val="3">3</button>
+          <button class="scale-btn" data-val="4">4</button>
+          <button class="scale-btn" data-val="5">5</button>
+        </div>
+        <div class="scale-labels"><span>Exhausted</span><span>Full energy</span></div>
+      </div>
+
+    </div>
+
+    <!-- Niggle card -->
+    <div class="card">
+      <div class="card-label">Injury / Niggle check</div>
+      <div class="niggle-options">
+        <button class="niggle-btn" data-nig="No">
+          <span class="dot"></span>
+          All good — no issues
+        </button>
+        <button class="niggle-btn" data-nig="Niggle">
+          <span class="dot"></span>
+          Minor niggle / soreness in a specific area
+        </button>
+        <button class="niggle-btn" data-nig="Injury">
+          <span class="dot"></span>
+          Injury — needs coach / physio attention
+        </button>
+      </div>
+      <div class="niggle-notes-wrap" id="niggle-notes-wrap">
+        <textarea id="niggle-notes" placeholder="Briefly describe where and what — e.g. 'Left hamstring, tight since Tuesday'"></textarea>
+      </div>
+    </div>
+
+    <!-- Live score panel -->
+    <div class="score-panel" id="score-panel">
+      <div class="score-row">
+        <div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.1em;font-weight:600;margin-bottom:4px;">Wellness score</div>
+          <div class="score-num" id="score-num">0 <span>/ 25</span></div>
+        </div>
+        <div class="score-zone-badge" id="score-zone">—</div>
+      </div>
+      <div class="score-bars">
+        <div class="bar-row">
+          <div class="bar-label">Sleep</div>
+          <div class="bar-track"><div class="bar-fill" id="bar-sleep" style="width:0%"></div></div>
+          <div class="bar-val" id="bv-sleep">—</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Soreness</div>
+          <div class="bar-track"><div class="bar-fill" id="bar-soreness" style="width:0%"></div></div>
+          <div class="bar-val" id="bv-soreness">—</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Stress</div>
+          <div class="bar-track"><div class="bar-fill" id="bar-stress" style="width:0%"></div></div>
+          <div class="bar-val" id="bv-stress">—</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Mood</div>
+          <div class="bar-track"><div class="bar-fill" id="bar-mood" style="width:0%"></div></div>
+          <div class="bar-val" id="bv-mood">—</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Energy</div>
+          <div class="bar-track"><div class="bar-fill" id="bar-energy" style="width:0%"></div></div>
+          <div class="bar-val" id="bv-energy">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error banner -->
+    <div class="error-banner" id="error-banner">
+      Something went wrong submitting — please try again or screenshot this and send to your coach.
+    </div>
+
+    <!-- Submit -->
+    <button class="submit-btn" id="submit-btn" disabled>
+      <span id="btn-text">Submit Check-In</span>
+      <div class="spinner" id="spinner"></div>
+    </button>
+    <div class="submit-note">Your data goes directly to your coaching staff</div>
+
+  </div><!-- /form-section -->
+
+  <!-- Success screen -->
+  <div id="success-screen">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+    <h2>Check-in complete!</h2>
+    <p>Your wellness data has been sent.<br>See you at training.</p>
+    <div id="success-detail"></div>
+  </div>
+
+</div><!-- /page-wrap -->
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// CONFIGURATION — replace this URL after you set up the Google Apps Script
+// ─────────────────────────────────────────────────────────────────────────────
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxBi4LwG3XUDuvsTTqyWn5HNk7vZnus0a8BeLl5VgZTBzJTOj0jZJhJ8W0ezX_oOrOGbQ/exec";
+// ─────────────────────────────────────────────────────────────────────────────
+
+const scores = { sleep: null, soreness: null, stress: null, mood: null, energy: null };
+let niggleVal = null;
+
+// Date display
+const now = new Date();
+const dateStr = now.toLocaleDateString('en-AU', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+document.getElementById('date-display').textContent = dateStr;
+
+// Scale buttons
+document.querySelectorAll('.q-block').forEach(block => {
+  const q = block.dataset.q;
+  block.querySelectorAll('.scale-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      block.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('sel'));
+      btn.classList.add('sel');
+      scores[q] = parseInt(btn.dataset.val);
+      const valEl = document.getElementById('val-' + q);
+      valEl.textContent = btn.dataset.val;
+      valEl.classList.add('active');
+      updateProgress();
+      updateScore();
+    });
+  });
+});
+
+// Niggle buttons
+document.querySelectorAll('.niggle-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.niggle-btn').forEach(b => b.className = 'niggle-btn');
+    const nig = btn.dataset.nig;
+    niggleVal = nig;
+    if (nig === 'No')     btn.classList.add('sel-no');
+    if (nig === 'Niggle') btn.classList.add('sel-yes');
+    if (nig === 'Injury') btn.classList.add('sel-inj');
+    const notesWrap = document.getElementById('niggle-notes-wrap');
+    notesWrap.style.display = (nig !== 'No') ? 'block' : 'none';
+    updateProgress();
+    updateSubmitState();
+  });
+});
+
+function allWellnessDone() {
+  return Object.values(scores).every(v => v !== null);
+}
+
+function updateProgress() {
+  const qs = ['sleep','soreness','stress','mood','energy'];
+  const playerDone = document.getElementById('player-sel').value !== '';
+  document.getElementById('dot-0').classList.toggle('done', playerDone);
+  qs.forEach((q,i) => {
+    document.getElementById('dot-' + (i+1)).classList.toggle('done', scores[q] !== null);
+  });
+  document.getElementById('dot-6').classList.toggle('done', niggleVal !== null);
+}
+
+document.getElementById('player-sel').addEventListener('change', () => {
+  updateProgress();
+  updateSubmitState();
+});
+
+function updateScore() {
+  if (!allWellnessDone()) return;
+  const s = scores;
+  const total = s.sleep + s.mood + s.energy + (6 - s.soreness) + (6 - s.stress);
+  const pct = Math.round((total / 21) * 100);
+
+  document.getElementById('score-panel').classList.add('visible');
+  document.getElementById('score-num').innerHTML = total + ' <span>/ 25</span>';
+
+  const zoneEl = document.getElementById('score-zone');
+  if (pct >= 75) {
+    zoneEl.textContent = 'Ready to train';
+    zoneEl.className = 'score-zone-badge zone-ready';
+  } else if (pct >= 55) {
+    zoneEl.textContent = 'Monitor';
+    zoneEl.className = 'score-zone-badge zone-monitor';
+  } else {
+    zoneEl.textContent = 'Flagged';
+    zoneEl.className = 'score-zone-badge zone-flag';
+  }
+
+  // Bars — soreness and stress inverted so 5 = full bar = good
+  const barData = {
+    sleep:    { raw: s.sleep,    display: s.sleep },
+    soreness: { raw: 6-s.soreness, display: s.soreness },
+    stress:   { raw: 6-s.stress,   display: s.stress },
+    mood:     { raw: s.mood,    display: s.mood },
+    energy:   { raw: s.energy,  display: s.energy },
+  };
+
+  Object.entries(barData).forEach(([q, {raw, display}]) => {
+    document.getElementById('bar-' + q).style.width = (raw / 5 * 100) + '%';
+    document.getElementById('bv-' + q).textContent = display;
+  });
+
+  updateSubmitState();
+}
+
+function updateSubmitState() {
+  const ready = document.getElementById('player-sel').value !== ''
+             && allWellnessDone()
+             && niggleVal !== null;
+  document.getElementById('submit-btn').disabled = !ready;
+}
+
+// Submit
+document.getElementById('submit-btn').addEventListener('click', async () => {
+  const player = document.getElementById('player-sel').value;
+  const s = scores;
+  const total = s.sleep + s.mood + s.energy + (6 - s.soreness) + (6 - s.stress);
+  const readinessPct = Math.round((total / 21) * 100);
+  const niggleNotes = document.getElementById('niggle-notes').value.trim();
+  const dateVal = now.toISOString().split('T')[0];
+
+  const payload = {
+    date:        dateVal,
+    player:      player,
+    sleep:       s.sleep,
+    soreness:    s.soreness,
+    stress:      s.stress,
+    mood:        s.mood,
+    energy:      s.energy,
+    score:       total,
+    readiness:   readinessPct,
+    niggle:      niggleVal,
+    niggleNotes: niggleNotes,
+    timestamp:   new Date().toISOString()
+  };
+
+  // Show spinner
+  document.getElementById('btn-text').style.display = 'none';
+  document.getElementById('spinner').style.display = 'block';
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('error-banner').style.display = 'none';
+
+  // If no script URL set yet, simulate success for preview
+  if (SCRIPT_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
+    await new Promise(r => setTimeout(r, 800));
+    showSuccess(player, total, readinessPct, s);
+    return;
+  }
+
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    showSuccess(player, total, readinessPct, s);
+  } catch (err) {
+    document.getElementById('btn-text').style.display = 'block';
+    document.getElementById('spinner').style.display = 'none';
+    document.getElementById('submit-btn').disabled = false;
+    document.getElementById('error-banner').style.display = 'block';
+  }
+});
+
+function showSuccess(player, total, pct, s) {
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('progress-dots').style.display = 'none';
+  const ss = document.getElementById('success-screen');
+  ss.style.display = 'block';
+
+  const zone = pct >= 75 ? 'Ready to train' : pct >= 55 ? 'Monitor' : 'Flagged';
+  document.getElementById('success-detail').innerHTML = `
+    <div class="sd-row"><span>Player</span><strong>${player}</strong></div>
+    <div class="sd-row"><span>Date</span><strong>${dateStr}</strong></div>
+    <div class="sd-row"><span>Wellness score</span><strong>${total} / 25</strong></div>
+    <div class="sd-row"><span>Readiness</span><strong>${pct}%</strong></div>
+    <div class="sd-row"><span>Status</span><strong>${zone}</strong></div>
+  `;
+}
+</script>
+</body>
+</html>
