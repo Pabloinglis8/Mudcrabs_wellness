@@ -874,8 +874,8 @@ document.getElementById('player-sel').addEventListener('change', () => {
 function updateScore() {
   if (!allWellnessDone()) return;
   const s = scores;
-  const total = s.sleep + s.mood + s.energy + (6 - s.soreness) + (6 - s.stress);
-  const pct = Math.round((total / 21) * 100);
+  const total = s.sleep + s.soreness + s.stress + s.mood + s.energy;;
+  const pct = Math.round((total / 25) * 100);
 
   document.getElementById('score-panel').classList.add('visible');
   document.getElementById('score-num').innerHTML = total + ' <span>/ 25</span>';
@@ -895,8 +895,8 @@ function updateScore() {
   // Bars — soreness and stress inverted so 5 = full bar = good
   const barData = {
     sleep:    { raw: s.sleep,    display: s.sleep },
-    soreness: { raw: 6-s.soreness, display: s.soreness },
-    stress:   { raw: 6-s.stress,   display: s.stress },
+    soreness: { raw: s.soreness, display: s.soreness },
+stress: { raw: s.stress, display: s.stress },
     mood:     { raw: s.mood,    display: s.mood },
     energy:   { raw: s.energy,  display: s.energy },
   };
@@ -920,8 +920,8 @@ function updateSubmitState() {
 document.getElementById('submit-btn').addEventListener('click', async () => {
   const player = document.getElementById('player-sel').value;
   const s = scores;
-  const total = s.sleep + s.mood + s.energy + (6 - s.soreness) + (6 - s.stress);
-  const readinessPct = Math.round((total / 21) * 100);
+  const total = s.sleep + s.soreness + s.stress + s.mood + s.energy;;
+  const readinessPct = Math.round((total / 25) * 100);
   const niggleNotes = document.getElementById('niggle-notes').value.trim();
   const dateVal = now.toISOString().split('T')[0];
 
